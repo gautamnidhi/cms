@@ -31,6 +31,22 @@ public class SkuRepository {
     }
 
     public SKU findById(Long id) {
-        return skuMap.get(id);
+        SKU sku = skuMap.get(id);
+        if (Objects.isNull(sku)) {
+            return new SKU();
+        }
+        return sku;
+    }
+
+    public boolean update(SKU sku) {
+        //similarly we can check for all the attributes and update
+        SKU skuFromMap = skuMap.get(sku.getId());
+        if (Objects.isNull(skuFromMap))
+            return false;
+        if (skuFromMap.getTitle() != null && !skuFromMap.getTitle().equals(sku.getTitle())) {
+            skuFromMap.setTitle(sku.getTitle());
+        }
+        return true;
+
     }
 }

@@ -4,6 +4,8 @@ import com.paypal.cms.models.SKUMetadata;
 import com.paypal.cms.repositories.SkuMetaRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+
 @Service
 public class SkuMetadataService {
     private final SkuMetaRepository skuMetaRepository;
@@ -21,6 +23,17 @@ public class SkuMetadataService {
     }
 
     SKUMetadata findBySKUId(Long skuId) {
-        return skuMetaRepository.findBySkuId(skuId);
+        SKUMetadata skuMetadata = skuMetaRepository.findBySkuId(skuId);
+        if (skuMetadata == null) {
+            return new SKUMetadata();
+        }
+        return skuMetadata;
+    }
+
+    boolean update(SKUMetadata skuMetadata){
+        if(Objects.nonNull(skuMetadata)){
+            return skuMetaRepository.update(skuMetadata);
+        }
+        return false;
     }
 }

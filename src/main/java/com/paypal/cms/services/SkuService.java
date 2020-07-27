@@ -56,4 +56,36 @@ public class SkuService {
         skuRepository.deleteSKU(skuId);
 
     }
+
+    public boolean update(SKU sku) {
+        //to index the title and description
+        String titleIndexed = skuRepository.findById(sku.getId()).getTitle();
+        String descriptionIndexed = skuMetadataService.findBySKUId(sku.getId()).getDescription();
+        String title = "";
+        String description = "";
+        if (sku.getTitle() != null && !sku.getTitle().equals(titleIndexed)) {
+            title = sku.getTitle();
+        }
+        if (sku.getSkuMetaData() != null && sku.getSkuMetaData().getDescription() != null && !sku.getSkuMetaData().getDescription().equals(descriptionIndexed)) {
+            description = sku.getSkuMetaData().getDescription();
+        }
+        if (description.isEmpty() && title.isEmpty()) {
+            indexService.deleteIndexedData(Arrays.asList(titleIndexed, descriptionIndexed), sku.getId());
+            indexService.index(Arrays.asList(title, description), sku.getId());
+        } else if (description.isEmpty()) {
+            indexService.deleteIndexedData(Arrays.asList(titleIndexed, description), sku.getId());
+            indexService.index(Arrays.asList(title, description), sku.getId());
+
+
+        } else if (title.isEmpty()) {
+            indexService.deleteIndexedData(Arrays.asList(title, descriptionIndexed), sku.getId());
+            indexService.index(Arrays.asList(title, description), sku.getId());
+        }
+        if (Objects.nonNull(sku.getSkuMetaData())) {
+            sku.getSkuMetaData().setSkuId(sku.getId());
+            skuMetadataService.update(sku.getSkuMetaData());
+        }
+        return skuRepository.update(sku);
+
+    }
 }
