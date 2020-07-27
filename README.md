@@ -31,3 +31,16 @@ curl -X GET \
   -H 'Postman-Token: 12b15a69-b8e4-4210-b037-96f5f872d4de' \
   -H 'cache-control: no-cache'
   
+update
+curl -X PUT \
+  'http://localhost:8888/sku/update/?skuId=1' \
+  -H 'Content-Type: application/json' \
+  -H 'Postman-Token: fc1ab43c-44b9-453f-855c-ee4218babe49' \
+  -H 'cache-control: no-cache' \
+  -d '{
+	"title": "Nikeee shoess",
+	"brandName": "shoes",
+	"skuMetaData" : {
+		"description": "I love Adidas"
+	}
+}'
